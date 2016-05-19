@@ -21,12 +21,17 @@ public class ExtStockLevelDao extends DefaultStockLevelDao
 
 	protected final Logger LOG = Logger.getLogger(this.getClass());
 
-	@Cacheable(value = "stockCache", key = "#product.getCode()+#warehouse.getCode()")
+	@Cacheable(value = "stockCache", key = "#productCode+#warehouse.getCode()")
 	@Override
 	public StockLevelModel findStockLevel(final String productCode, final WarehouseModel warehouse)
 	{
 		LOG.info("----------------------findStockLevel-----------------------------");
-		return super.findStockLevel(productCode, warehouse);
+		String key = productCode + warehouse.getCode();
+		if(cacheManager.getCache("stockCache").get(key,StockLevelModel.class) == null){
+			StockLevelModel stocklevel = super.findStockLevel(productCode, warehouse);
+			return stocklevel;
+		}
+		return cacheManager.getCache("stockCache").get(key,StockLevelModel.class);
 	}
 
 	@Override
@@ -35,7 +40,10 @@ public class ExtStockLevelDao extends DefaultStockLevelDao
 		ArrayList<StockLevelModel> result = new ArrayList();
 		while(var.hasNext()) {
 			WarehouseModel house = (WarehouseModel)var.next();
-			result.add(this.findStockLevel(productCode,house));
+			StockLevelModel stocklevelObj = this.findStockLevel(productCode,house);
+			if(stocklevelObj != null){
+				result.add(stocklevelObj);
+			}
 		}
 		return result;
 	}
