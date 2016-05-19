@@ -6,7 +6,9 @@ addons/
 addonsrc/
 /hybris-dependencies
 /hybris-ems
-
+*.classpath
+*.project
+*org.eclipse*
 /CIS
 /OMS5.4
 /licenses*
