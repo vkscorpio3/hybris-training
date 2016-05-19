@@ -1,11 +1,9 @@
 package de.hybris.platform.stock.impl;
 
-import de.hybris.platform.basecommerce.constants.GeneratedBasecommerceConstants.Enumerations.StockLevelUpdateType;
 import de.hybris.platform.basecommerce.enums.InStockStatus;
 import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.ordersplitting.model.StockLevelModel;
 import de.hybris.platform.ordersplitting.model.WarehouseModel;
-import de.hybris.platform.stock.exception.InsufficientStockLevelException;
 
 import javax.annotation.Resource;
 
@@ -32,35 +30,12 @@ public class ExtStockService extends DefaultStockService
 				treatNegativeAsZero);
 	}
 
-
-	@Override
-	public void reserve(final ProductModel product, final WarehouseModel warehouse, final int amount, final String comment)
-			throws InsufficientStockLevelException
-	{
-		if (amount <= 0)
-		{
-			throw new IllegalArgumentException("amount must be greater than zero.");
-		}
-		final StockLevelModel currentStockLevel = checkAndGetStockLevel(product, warehouse);
-		final Integer reserved = stockLevelDao.reserve(currentStockLevel, amount);
-		if (reserved == null)
-		{
-			throw new InsufficientStockLevelException((new StringBuilder("insufficient available amount for stock level ["))
-					.append(currentStockLevel.getPk()).append("]").toString());
-		}
-		else
-		{
-			clearCacheForItem(currentStockLevel);
-			createStockLevelHistoryEntry(currentStockLevel, StockLevelUpdateType.CUSTOMER_RESERVE, reserved.intValue(), comment);
-			return;
-		}
-	}
-
 	@Override
 	public void updateActualStockLevel(final ProductModel product, final WarehouseModel warehouse, final int actualAmount,
 			final String comment)
 	{
 		super.updateActualStockLevel(product, warehouse, actualAmount, comment);
-		cacheManager.getCache("stockCache").get(product.getCode() + warehouse.getCode(), StockLevelModel.class);
+		final StockLevelModel stock = cacheManager.getCache("stockCache").get(product.getCode() + warehouse.getCode(),
+				StockLevelModel.class);
 	}
 }
