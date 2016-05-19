@@ -444,8 +444,10 @@
 	</bean>
 
 	<alias alias="stockLevelDao" name="extStockLevelDao"/>
-	<bean id="extStockLevelDao" class="de.hybris.platform.stock.impl.ExtStockLevelDao"
-	      parent="defaultStockLevelDao" scope="tenant">
+	<bean id="extStockLevelDao" class="de.hybris.platform.stock.impl.ExtStockLevelDao" parent="defaultStockLevelDao" scope="tenant">
+	</bean>
+
+	<bean id="stockLevelCacheFacade" class="de.hybris.platform.cache.impl.StockCacheFacade">
 	</bean>
 
 
