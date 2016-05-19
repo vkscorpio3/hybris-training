@@ -9,6 +9,10 @@ import org.apache.log4j.Logger;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.Cacheable;
 
+import java.util.Collection;
+import java.util.ArrayList;
+import java.util.Iterator;
+
 
 public class ExtStockLevelDao extends DefaultStockLevelDao
 {
@@ -23,6 +27,17 @@ public class ExtStockLevelDao extends DefaultStockLevelDao
 	{
 		LOG.info("----------------------findStockLevel-----------------------------");
 		return super.findStockLevel(productCode, warehouse);
+	}
+
+	@Override
+	public Collection<StockLevelModel> findStockLevels(String productCode, Collection<WarehouseModel> warehouses) {
+		Iterator var = warehouses.iterator();
+		ArrayList<StockLevelModel> result = new ArrayList();
+		while(var.hasNext()) {
+			WarehouseModel house = (WarehouseModel)var.next();
+			result.add(this.findStockLevel(productCode,house));
+		}
+		return result;
 	}
 
 	@Override
