@@ -29,6 +29,7 @@ public class ExtStockLevelDao extends DefaultStockLevelDao
 		String key = productCode + warehouse.getCode();
 		if(cacheManager.getCache("stockCache").get(key,StockLevelModel.class) == null){
 			StockLevelModel stocklevel = super.findStockLevel(productCode, warehouse);
+			cacheManager.getCache("stockCache").put(key, stocklevel);
 			return stocklevel;
 		}
 		return cacheManager.getCache("stockCache").get(key,StockLevelModel.class);
