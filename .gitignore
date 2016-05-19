@@ -59,3 +59,4 @@ hybris/bin/custom/grandvision/grandvisionstorefront/.settings/
 hybris/bin/custom/grandvision/gvchinasocialshareaddon/.settings/
 hybris/bin/custom/grandvision/paymentaddon/.settings/
 ESB/muleIntegration/target/*
+*.iml
