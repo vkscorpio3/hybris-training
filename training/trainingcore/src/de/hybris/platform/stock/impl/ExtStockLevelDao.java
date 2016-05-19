@@ -28,8 +28,27 @@ public class ExtStockLevelDao extends DefaultStockLevelDao
 	@Override
 	public void updateActualAmount(final StockLevelModel stockLevel, final int actualAmount)
 	{
+		LOG.info("----------------------updateActualAmount-----------------------------");
 		super.updateActualAmount(stockLevel, actualAmount);
 		cacheManager.getCache("stockCache").put(stockLevel.getProductCode() + stockLevel.getWarehouse().getCode(), stockLevel);
+	}
+
+	@Override
+	public Integer reserve(final StockLevelModel stockLevel, final int amount)
+	{
+		LOG.info("----------------------reserve-----------------------------");
+		final Integer i = super.reserve(stockLevel, amount);
+		cacheManager.getCache("stockCache").put(stockLevel.getProductCode() + stockLevel.getWarehouse().getCode(), stockLevel);
+		return i;
+	}
+
+	@Override
+	public Integer release(final StockLevelModel stockLevel, final int amount)
+	{
+		LOG.info("----------------------release-----------------------------");
+		final Integer i = super.release(stockLevel, amount);
+		cacheManager.getCache("stockCache").put(stockLevel.getProductCode() + stockLevel.getWarehouse().getCode(), stockLevel);
+		return i;
 	}
 
 }
