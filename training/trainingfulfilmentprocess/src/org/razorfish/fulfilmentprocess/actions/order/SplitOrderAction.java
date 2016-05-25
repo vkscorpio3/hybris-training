@@ -15,18 +15,24 @@ package org.razorfish.fulfilmentprocess.actions.order;
 
 import de.hybris.platform.core.enums.OrderStatus;
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
+import de.hybris.platform.core.model.product.ProductModel;
 import de.hybris.platform.orderprocessing.model.OrderProcessModel;
 import de.hybris.platform.ordersplitting.OrderSplittingService;
+import de.hybris.platform.ordersplitting.model.ConsignmentEntryModel;
 import de.hybris.platform.ordersplitting.model.ConsignmentModel;
 import de.hybris.platform.ordersplitting.model.ConsignmentProcessModel;
+import de.hybris.platform.ordersplitting.model.WarehouseModel;
 import de.hybris.platform.processengine.BusinessProcessService;
 import de.hybris.platform.processengine.action.AbstractProceduralAction;
-import org.razorfish.fulfilmentprocess.constants.TrainingFulfilmentProcessConstants;
+import de.hybris.platform.stock.StockService;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.Resource;
+
 import org.apache.log4j.Logger;
+import org.razorfish.fulfilmentprocess.constants.TrainingFulfilmentProcessConstants;
 import org.springframework.beans.factory.annotation.Required;
 
 
@@ -36,6 +42,9 @@ public class SplitOrderAction extends AbstractProceduralAction<OrderProcessModel
 
 	private OrderSplittingService orderSplittingService;
 	private BusinessProcessService businessProcessService;
+
+	@Resource
+	private StockService stockService;
 
 	@Override
 	public void executeAction(final OrderProcessModel process) throws Exception
@@ -74,7 +83,12 @@ public class SplitOrderAction extends AbstractProceduralAction<OrderProcessModel
 			subProcess.setParentProcess(process);
 			subProcess.setConsignment(consignment);
 			save(subProcess);
-
+			for (final ConsignmentEntryModel conentry : consignment.getConsignmentEntries())
+			{
+				final ProductModel prod = conentry.getOrderEntry().getProduct();
+				final WarehouseModel ware = consignment.getWarehouse();
+				stockService.reserve(prod, ware, conentry.getQuantity().intValue(), "");
+			}
 			businessProcessService.startProcess(subProcess);
 		}
 		setOrderStatus(process.getOrder(), OrderStatus.ORDER_SPLIT);
