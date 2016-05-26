@@ -10,7 +10,7 @@ public interface AmwayCache extends Cache
 
 	public abstract void overload(final Object key,AmwayCache.OverloadCallback overloadCallback);
 
-	public abstract class OverloadCallback<T>{
-		public abstract T callbackFun(T overloadObj);
+	public interface OverloadCallback<T>{
+		T callbackFun(T overloadObj);
 	}
 }
