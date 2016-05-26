@@ -14,11 +14,14 @@
 package org.razorfish.fulfilmentprocess.strategy.impl;
 
 import de.hybris.platform.core.model.order.AbstractOrderEntryModel;
+import de.hybris.platform.ordersplitting.WarehouseService;
 import de.hybris.platform.ordersplitting.model.ConsignmentModel;
 import de.hybris.platform.ordersplitting.model.WarehouseModel;
 import de.hybris.platform.ordersplitting.strategy.SplittingStrategy;
 import de.hybris.platform.ordersplitting.strategy.impl.OrderEntryGroup;
+import de.hybris.platform.storelocator.model.PointOfServiceModel;
 
+import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -28,6 +31,9 @@ import java.util.Random;
 public class SplitByWarehouse implements SplittingStrategy
 {
 	private static final String WAREHOUSE_LIST_NAME = "WAREHOUSE_LIST";
+
+	@Resource
+	private WarehouseService warehouseService;
 
 	protected List<OrderEntryGroup> splitForWarehouses(final OrderEntryGroup orderEntryList)
 	{
@@ -116,8 +122,8 @@ public class SplitByWarehouse implements SplittingStrategy
 
 		if (orderEntry.getOrder().getStore() != null)
 		{
-			possibleWarehouses.addAll(orderEntry.getDeliveryPointOfService() == null ? orderEntry.getOrder().getStore()
-					.getWarehouses() : orderEntry.getDeliveryPointOfService().getWarehouses());
+			PointOfServiceModel pointOfService = orderEntry.getDeliveryPointOfService();
+			possibleWarehouses.addAll(pointOfService == null ? warehouseService.getWarehousesWithProductsInStock(orderEntry) :pointOfService.getWarehouses());
 		}
 
 		return possibleWarehouses;
