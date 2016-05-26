@@ -152,7 +152,7 @@ public class AmwayHazelcastCache implements AmwayCache
 		}
 	}
 
-	public void overload(final Object key, AmwayHazelcastCache.OverloadCallback overloadCallback){
+	public void overload(final Object key, AmwayCache.OverloadCallback overloadCallback){
 
 	}
 }

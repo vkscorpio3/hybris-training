@@ -447,9 +447,6 @@
 	<bean id="extStockLevelDao" class="de.hybris.platform.stock.impl.ExtStockLevelDao" parent="defaultStockLevelDao" scope="tenant">
 	</bean>
 
-	<bean id="stockLevelCacheFacade" class="de.hybris.platform.cache.impl.StockCacheFacade">
-	</bean>
-
 
 	<bean id="cachingFacade" class="de.hybris.platform.demo.spring.facades.impl.DefaultCachingFacade">
 		<property name="cachingService" ref="cachingService"/>

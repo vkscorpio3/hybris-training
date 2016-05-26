@@ -29,7 +29,7 @@ public class AmwayRedisCache extends RedisCache implements AmwayCache
 		this.defaultExpiration = expiration;
 	}
 
-	public void overload(final Object key, AmwayRedisCache.OverloadCallback overloadCallback){
+	public void overload(final Object key, AmwayCache.OverloadCallback overloadCallback){
 		RedisSerializer keySerializer = ((RedisOperations) getNativeCache()).getKeySerializer();
 		RedisCacheKey cacheKey = (new RedisCacheKey(key)).usePrefix(this.cacheMetadata.getKeyPrefix()).withKeySerializer(keySerializer);
 		RedisCacheElement element = new RedisCacheElement(cacheKey, (Object)null);
