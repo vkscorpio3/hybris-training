@@ -39,7 +39,7 @@ public class AmwayRedisCache extends RedisCache implements AmwayCache
 				this.waitForLock(connection);
 				this.lock(connection);
 				byte[] value = connection.get(element.getKeyBytes());
-				Object valueObj = this.valueSerializer != null?this.getValueSerializer().deserialize(value):value;
+				Object valueObj = this.getValueSerializer() != null?this.getValueSerializer().deserialize(value):value;
 				valueObj = overloadCallback.callbackFun(valueObj);
 				if(!AmwayRedisCache.isClusterConnection(connection)) {
 					connection.multi();

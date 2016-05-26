@@ -151,4 +151,8 @@ public class AmwayHazelcastCache implements AmwayCache
 			return 0;
 		}
 	}
+
+	public void overload(final Object key, AmwayHazelcastCache.OverloadCallback overloadCallback){
+
+	}
 }
