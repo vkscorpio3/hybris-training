@@ -1,6 +1,5 @@
 package de.hybris.platform.stock.impl;
 
-import de.hybris.platform.cache.impl.StockCacheFacade;
 import de.hybris.platform.ordersplitting.model.StockLevelModel;
 import de.hybris.platform.ordersplitting.model.WarehouseModel;
 
@@ -18,10 +17,6 @@ import com.amway.cache.AmwayCacheManager;
 
 public class ExtStockLevelDao extends DefaultStockLevelDao
 {
-	@Resource(name = "stockLevelCacheFacade")
-	StockCacheFacade stockLevelCacheFacade;
-
-
 	@Resource(name = "cacheManager")
 	AmwayCacheManager cacheManager;
 
@@ -78,21 +73,23 @@ public class ExtStockLevelDao extends DefaultStockLevelDao
 	}
 
 	@Override
-	public void updateActualAmount(final StockLevelModel stockLevel, final int actualAmount)
-	{
-		LOG.info("----------------------updateActualAmount-----------------------------");
-		super.updateActualAmount(stockLevel, actualAmount);
-		stockLevelCacheFacade.put(stockLevel.getProductCode() + stockLevel.getWarehouse().getCode(), stockLevel);
-	}
-
-	@Override
 	public Integer reserve(final StockLevelModel stockLevel, final int amount)
 	{
 		final Integer i = super.reserve(stockLevel, amount);
 		final AmwayCache cache = cacheManager.getAmwayCache("stock_level");
 		final String key = stockLevel.getProductCode() + stockLevel.getWarehouse().getCode();
 		LOG.info("findStockLevel reserve " + key + ": " + stockLevel.getAvailable() + "#" + stockLevel.getReserved());
-		cache.put(stockLevel.getProductCode() + stockLevel.getWarehouse().getCode(), stockLevel);
+		cache.overload(key, new AmwayCache.OverloadCallback(){
+			public Object callbackFun(Object overloadObj){
+				StockLevelModel stockLevel = (StockLevelModel)overloadObj;
+				int availableNum = stockLevel.getAvailable()+stockLevel.getOverSelling()-stockLevel.getReserved();
+				int amountNum = stockLevel.getReserved()+amount;
+				amountNum = amountNum > availableNum ? availableNum : amountNum;
+				stockLevel.setReserved(amountNum);
+				LOG.info("StockLevel " + key + "- overload reserved num : "+amountNum);
+				return (Object)stockLevel;
+			}
+		});
 		return i;
 	}
 
@@ -102,8 +99,17 @@ public class ExtStockLevelDao extends DefaultStockLevelDao
 		final Integer i = super.release(stockLevel, amount);
 		final AmwayCache cache = cacheManager.getAmwayCache("stock_level");
 		final String key = stockLevel.getProductCode() + stockLevel.getWarehouse().getCode();
-		LOG.info("findStockLevel release " + key + ": " + stockLevel.getAvailable() + "#" + stockLevel.getReserved());
-		cache.put(stockLevel.getProductCode() + stockLevel.getWarehouse().getCode(), stockLevel);
+		cache.overload(key, new AmwayCache.OverloadCallback(){
+			public Object callbackFun(Object overloadObj){
+				StockLevelModel stockLevel = (StockLevelModel)overloadObj;
+				int availableNum = stockLevel.getAvailable()+stockLevel.getOverSelling()-stockLevel.getReserved();
+				int amountNum = stockLevel.getReserved()-amount;
+				amountNum = amountNum > 0 ? amountNum : 0;
+				stockLevel.setReserved(amountNum);
+				LOG.info("StockLevel " + key + "- overload reserved num : "+amountNum);
+				return (Object)stockLevel;
+			}
+		});
 		return i;
 	}
 

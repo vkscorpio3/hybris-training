@@ -4,7 +4,13 @@ package com.amway.cache;
 import org.springframework.cache.Cache;
 
 
-public abstract interface AmwayCache extends Cache
+public interface AmwayCache extends Cache
 {
 	public abstract boolean containsKey(final Object obj);
+
+	public abstract void overload(final Object key,AmwayCache.OverloadCallback overloadCallback);
+
+	public abstract class OverloadCallback<T>{
+		public abstract T callbackFun(T overloadObj);
+	}
 }
