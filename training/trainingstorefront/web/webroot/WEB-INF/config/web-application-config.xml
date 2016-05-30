@@ -40,5 +40,5 @@
 	<import resource="classpath:/acceleratorcms/spring/web-spring-context.xml"/>
 	<import resource="spring-cms-config.xml"/>
 	<import resource="multi-step-checkout-config.xml"/>
-
+	<import resource="spring-session.xml"/>
 </beans>
