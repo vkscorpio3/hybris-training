@@ -11,7 +11,7 @@ public class DefaultDeserializer implements Deserializer<Object> {
     private final ClassLoader classLoader;
 
     public DefaultDeserializer() {
-        this.classLoader = null;
+        this.classLoader = getClass().getClassLoader();
     }
 
     public DefaultDeserializer(ClassLoader classLoader) {

@@ -48,10 +48,8 @@
 		<property name="port" value="6379"/>
 	</bean>
 
-	<bean id="hybrisWebAppClassLoad" class="de.hybris.tomcat.HybrisWebappLoader.HybrisWebappClassLoader"/>
 	<bean id="SerializingConverter" class="org.springframework.core.serializer.support.SerializingConverter"/>
 	<bean id="deserializerObj" class="org.razorfish.storefront.serializer.DefaultDeserializer">
-		<constructor-arg ref="hybrisWebAppClassLoad"/>
 	</bean>
 	<bean id="DeserializingConverter" class="org.springframework.core.serializer.support.DeserializingConverter">
 		<constructor-arg ref="deserializerObj"/>
@@ -66,7 +64,6 @@
 	<util:list id="defaultStorefrontTenantDefaultFilterChainList">
 		<!-- generic platform filters -->
 		<ref bean="log4jFilter"/>
-		<ref bean="springSessionRepositoryFilter"/>
 		<ref bean="storefrontSessionFilter"/>
 		<ref bean="addOnDevelopmentFilter"/>
 
