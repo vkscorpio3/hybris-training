@@ -40,10 +40,33 @@
 		</property>
 	</bean>
 
+	<bean class="org.springframework.session.data.redis.config.annotation.web.http.RedisHttpSessionConfiguration"/>
+
+	<!--2-->
+	<bean class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory">
+		<property name="hostName" value="127.0.0.1"/>
+		<property name="port" value="6379"/>
+	</bean>
+
+	<bean id="hybrisWebAppClassLoad" class="de.hybris.tomcat.HybrisWebappLoader.HybrisWebappClassLoader"/>
+	<bean id="SerializingConverter" class="org.springframework.core.serializer.support.SerializingConverter"/>
+	<bean id="deserializerObj" class="org.razorfish.storefront.serializer.DefaultDeserializer">
+		<constructor-arg ref="hybrisWebAppClassLoad"/>
+	</bean>
+	<bean id="DeserializingConverter" class="org.springframework.core.serializer.support.DeserializingConverter">
+		<constructor-arg ref="deserializerObj"/>
+	</bean>
+
+	<bean id="springSessionDefaultRedisSerializer" class="org.springframework.data.redis.serializer.JdkSerializationRedisSerializer">
+		<constructor-arg ref="SerializingConverter"/>
+		<constructor-arg ref="DeserializingConverter"/>
+	</bean>
+
 	<alias name="defaultStorefrontTenantDefaultFilterChainList" alias="storefrontTenantDefaultFilterChainList" />
 	<util:list id="defaultStorefrontTenantDefaultFilterChainList">
 		<!-- generic platform filters -->
 		<ref bean="log4jFilter"/>
+		<ref bean="springSessionRepositoryFilter"/>
 		<ref bean="storefrontSessionFilter"/>
 		<ref bean="addOnDevelopmentFilter"/>
 
