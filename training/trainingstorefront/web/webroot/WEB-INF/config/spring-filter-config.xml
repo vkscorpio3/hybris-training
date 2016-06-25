@@ -126,7 +126,7 @@
 		<property name="sessionService" ref="sessionService"/>
 	</bean>
 
-	<bean id="storefrontSessionFilter" class="de.hybris.platform.servicelayer.web.SessionFilter" >
+	<bean id="storefrontSessionFilter" class="org.razorfish.storefront.filters.WebSessionFilter" >
 		<property name="sessionService" ref="sessionService"/>
 	</bean>
 
