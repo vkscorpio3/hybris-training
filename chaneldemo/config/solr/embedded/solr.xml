@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<solr persistent="true" sharedLib="hybris">
+  <cores adminPath="/admin/cores">
+    <core name="master_electronics_Product" instanceDir="/Users/bingluo/jobs/chaneldemo/hybris/config/solr/embedded" dataDir="/Users/bingluo/jobs/chaneldemo/hybris/data/solrfacetsearch/MASTER/electronics_Product_1"/>
+
+    <core name="master_electronics_Product_1" instanceDir="/Users/bingluo/jobs/chaneldemo/hybris/config/solr/embedded" dataDir="/Users/bingluo/jobs/chaneldemo/hybris/data/solrfacetsearch/MASTER/electronics_Product"/>
+</cores>
+</solr>
