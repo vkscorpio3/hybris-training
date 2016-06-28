@@ -1,31 +1,33 @@
 package com.tencent.common;
 
-import com.tencent.service.IServiceRequest;
-import com.thoughtworks.xstream.XStream;
-import com.thoughtworks.xstream.io.xml.DomDriver;
-import com.thoughtworks.xstream.io.xml.XmlFriendlyNameCoder;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.net.SocketTimeoutException;
+import java.security.KeyManagementException;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.UnrecoverableKeyException;
+import java.security.cert.CertificateException;
+
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.conn.ConnectTimeoutException;
 import org.apache.http.conn.ConnectionPoolTimeoutException;
-import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
-import org.apache.http.conn.ssl.SSLContexts;
+import org.apache.http.conn.scheme.Scheme;
+import org.apache.http.conn.ssl.SSLSocketFactory;
 import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
+import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
 import org.slf4j.LoggerFactory;
 
-import javax.net.ssl.SSLContext;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.SocketTimeoutException;
-import java.security.*;
-import java.security.cert.CertificateException;
+import com.tencent.service.IServiceRequest;
+import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.io.xml.DomDriver;
+import com.thoughtworks.xstream.io.xml.XmlFriendlyNameCoder;
 
 /**
  * User: rizenguo
@@ -52,11 +54,8 @@ public class HttpsRequest implements IServiceRequest{
     //传输超时时间，默认30秒
     private int connectTimeout = 30000;
 
-    //请求器的配置
-    private RequestConfig requestConfig;
-
     //HTTP请求器
-    private CloseableHttpClient httpClient;
+    private DefaultHttpClient httpClient;
 
     public HttpsRequest() throws UnrecoverableKeyException, KeyManagementException, NoSuchAlgorithmException, KeyStoreException, IOException {
         init();
@@ -64,7 +63,7 @@ public class HttpsRequest implements IServiceRequest{
 
     private void init() throws IOException, KeyStoreException, UnrecoverableKeyException, NoSuchAlgorithmException, KeyManagementException {
 
-        KeyStore keyStore = KeyStore.getInstance("PKCS12");
+        KeyStore keyStore = KeyStore.getInstance(KeyStore.getDefaultType());
         FileInputStream instream = new FileInputStream(new File(Configure.getCertLocalPath()));//加载本地的证书进行https加密传输
         try {
             keyStore.load(instream, Configure.getCertPassword().toCharArray());//设置证书密码
@@ -76,24 +75,14 @@ public class HttpsRequest implements IServiceRequest{
             instream.close();
         }
 
-        // Trust own CA and all self-signed certs
-        SSLContext sslcontext = SSLContexts.custom()
-                .loadKeyMaterial(keyStore, Configure.getCertPassword().toCharArray())
-                .build();
-        // Allow TLSv1 protocol only
-        SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(
-                sslcontext,
-                new String[]{"TLSv1"},
-                null,
-                SSLConnectionSocketFactory.BROWSER_COMPATIBLE_HOSTNAME_VERIFIER);
+        SSLSocketFactory socketFactory = new SSLSocketFactory(keyStore);
+        
+        httpClient = new DefaultHttpClient();
 
-        httpClient = HttpClients.custom()
-                .setSSLSocketFactory(sslsf)
-                .build();
-
-        //根据默认超时限制初始化requestConfig
-        requestConfig = RequestConfig.custom().setSocketTimeout(socketTimeout).setConnectTimeout(connectTimeout).build();
-
+        socketFactory.setHostnameVerifier(SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
+        Scheme sch = new Scheme("https", 443, socketFactory);
+        httpClient.getConnectionManager().getSchemeRegistry().register(sch);
+        
         hasInit = true;
     }
 
@@ -134,8 +123,6 @@ public class HttpsRequest implements IServiceRequest{
         httpPost.addHeader("Content-Type", "text/xml");
         httpPost.setEntity(postEntity);
 
-        //设置请求器的配置
-        httpPost.setConfig(requestConfig);
 
         Util.log("executing request" + httpPost.getRequestLine());
 
@@ -163,30 +150,6 @@ public class HttpsRequest implements IServiceRequest{
         }
 
         return result;
-    }
-
-    /**
-     * 设置连接超时时间
-     *
-     * @param socketTimeout 连接时长，默认10秒
-     */
-    public void setSocketTimeout(int socketTimeout) {
-        socketTimeout = socketTimeout;
-        resetRequestConfig();
-    }
-
-    /**
-     * 设置传输超时时间
-     *
-     * @param connectTimeout 传输时长，默认30秒
-     */
-    public void setConnectTimeout(int connectTimeout) {
-        connectTimeout = connectTimeout;
-        resetRequestConfig();
-    }
-
-    private void resetRequestConfig(){
-        requestConfig = RequestConfig.custom().setSocketTimeout(socketTimeout).setConnectTimeout(connectTimeout).build();
     }
 
     /**

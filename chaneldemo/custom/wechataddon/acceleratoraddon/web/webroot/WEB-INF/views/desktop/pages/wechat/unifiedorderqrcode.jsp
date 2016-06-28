@@ -21,6 +21,7 @@
 	</div>
 	
 	
+		<img src="${qrcode_url}" alt="">
 
 		<cms:pageSlot position="TopContent" var="feature" element="div" class="span-24 top-content-slot cms_disp-img_slot">
 			<cms:component component="${feature}"/>

@@ -1,6 +1,8 @@
 package com.tencent;
 
 import com.tencent.common.Util;
+import com.tencent.protocol.qrcode.UnifiedorderReqData;
+import com.tencent.service.UnifiedOrderService;
 
 
 public class Main
@@ -11,7 +13,12 @@ public class Main
 
 		try
 		{
-
+			UnifiedOrderService unifiedOrderService = new UnifiedOrderService();
+			UnifiedorderReqData unifiedorderReqData = new UnifiedorderReqData();
+			unifiedorderReqData.setOut_trade_no("S002-00253002");
+			unifiedorderReqData.setTotal_fee(1);
+			String x = unifiedOrderService.request(unifiedorderReqData);
+			System.out.println(x);
 			//--------------------------------------------------------------------
 			//温馨提示，第一次使用该SDK时请到com.tencent.common.Configure类里面进行配置
 			//--------------------------------------------------------------------
@@ -34,7 +41,7 @@ public class Main
 			//--------------------------------------------------------------------
 
 			//1）测试被扫支付API
-			PayServiceTest.test();
+//			PayServiceTest.test();
 
 			//2）测试被扫订单查询API
 			//PayQueryServiceTest.test();
@@ -62,7 +69,7 @@ public class Main
 		}
 		catch (final Exception e)
 		{
-			Util.log(e.getMessage());
+			e.printStackTrace();
 		}
 
 	}

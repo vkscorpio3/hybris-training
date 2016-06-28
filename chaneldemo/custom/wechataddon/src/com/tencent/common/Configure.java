@@ -15,16 +15,16 @@ public class Configure
 	private static String appID = "";
 
 	//微信支付分配的商户号ID（开通公众号的微信支付功能之后可以获取到）
-	private static String mchID = "";
+	private static String mchID = "1338370001";
 
 	//受理模式下给子商户分配的子商户号
 	private static String subMchID = "";
 
 	//HTTPS证书的本地路径
-	private static String certLocalPath = "";
+	private static String certLocalPath = "D:/bluojobs/h545/hybris/bin/custom/chaneldemo/custom/wechataddon/resources/wechataddon/wechat.keystore";
 
 	//HTTPS证书密码，默认密码等于商户号MCHID
-	private static String certPassword = "";
+	private static String certPassword = "111111";
 
 	//是否使用异步线程的方式来上报API测速，默认为异步模式
 	private static boolean useThreadToDoReport = true;

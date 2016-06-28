@@ -13,7 +13,7 @@
   
 --><extensioninfo xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="extensioninfo.xsd">
 
-	<extension abstractclassprefix="Generated" classprefix="Wechataddon" description="wechataddon extension" managername="WechataddonManager" managersuperclass="de.hybris.platform.jalo.extension.Extension" name="wechataddon">
+	<extension abstractclassprefix="Generated" usemaven="true" classprefix="Wechataddon" description="wechataddon extension" managername="WechataddonManager" managersuperclass="de.hybris.platform.jalo.extension.Extension" name="wechataddon">
 
 		<!-- you should add all required extensions to this list, except platform extensions which are automatically required -->         
 		<requires-extension name="hmc"/>
