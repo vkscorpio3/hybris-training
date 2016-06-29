@@ -40,4 +40,12 @@
 		<property name="extensionName" value="wechataddon" />
 	</bean>
 
+
+	<alias name="DefaultWechatOrderQueryDao" alias="wechatOrderQueryDao" />
+	<bean name="DefaultWechatOrderQueryDao" class="com.razorfish.wechataddon.daos.impl.DefaultWechatQueryDao" scope="tenant">
+		<constructor-arg value="Order" />
+	</bean>
+	
+	<bean name="orderUpdateResultListener" class="com.razorfish.wechataddon.service.OrderUpdateResultListener" scope="tenant">
+	</bean>	 
 </beans>

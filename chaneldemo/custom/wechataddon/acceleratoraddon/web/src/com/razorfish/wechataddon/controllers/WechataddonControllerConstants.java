@@ -17,5 +17,23 @@ package com.razorfish.wechataddon.controllers;
  */
 public interface WechataddonControllerConstants
 {
-	// implement here controller constants used by this extension
+	String ADDON_PREFIX = "addon:/wechataddon/";
+
+	/**
+	 * Class with view name constants
+	 */
+	interface Views
+	{
+
+		interface Pages
+		{
+			String UNIFIED_ORDER_QRCODE_PAGE = ADDON_PREFIX + "pages/wechat/unifiedorderqrcode";
+		}
+
+		interface Fragments
+		{
+
+
+		}
+	}
 }

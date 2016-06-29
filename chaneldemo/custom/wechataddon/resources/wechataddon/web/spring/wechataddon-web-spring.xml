@@ -22,7 +22,8 @@
            http://www.springframework.org/schema/context
            http://www.springframework.org/schema/context/spring-context.xsd">
 
-
+	<context:component-scan base-package="com.razorfish.wechataddon" scope-resolver="de.hybris.platform.spring.IgnoreTenantScopeMetadataResolver"  />
+	
 	<!-- Expose /acceleratoraddon/web/webroot/WEB-INF/messages/base.js.properties  resource bundle as javascript variables -->
 	<bean id="defaultWechataddonJavaScriptMessageResourceAccessor" parent="abstractJavaScriptMessageResourceAccessor">
 		<property name="addOnName" value="wechataddon"/>

@@ -18,6 +18,7 @@
 		<!-- you should add all required extensions to this list, except platform extensions which are automatically required -->         
 		<requires-extension name="hmc"/>
 		<requires-extension name="addonsupport"/>
+		<requires-extension name="acceleratorstorefrontcommons"/>
 
 		<coremodule generated="true" manager="com.razorfish.wechataddon.jalo.WechataddonManager" packageroot="com.razorfish.wechataddon"/>
 
