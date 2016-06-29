@@ -21,7 +21,7 @@ public class Configure
 	private static String subMchID = "";
 
 	//HTTPS证书的本地路径
-	private static String certLocalPath = "D:/bluojobs/h545/hybris/bin/custom/chaneldemo/custom/wechataddon/resources/wechataddon/wechat.keystore";
+	private static String certLocalPath = "/wechataddon/wechat.keystore";
 
 	//HTTPS证书密码，默认密码等于商户号MCHID
 	private static String certPassword = "111111";
