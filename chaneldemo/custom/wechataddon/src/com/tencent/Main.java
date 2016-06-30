@@ -1,7 +1,11 @@
 package com.tencent;
 
+import com.razorfish.wechataddon.service.OrderUpdateResultListener;
+import com.tencent.business.ScanPayQueryBusiness;
 import com.tencent.protocol.qrcode.UnifiedorderReqData;
 import com.tencent.service.UnifiedOrderService;
+
+import de.hybris.platform.commercefacades.order.data.OrderData;
 
 
 public class Main
@@ -12,14 +16,24 @@ public class Main
 
 		try
 		{
-			final UnifiedOrderService unifiedOrderService = new UnifiedOrderService();
 			final UnifiedorderReqData unifiedorderReqData = new UnifiedorderReqData();
 			unifiedorderReqData.setOut_trade_no("S002-00253002");
 			unifiedorderReqData.setTotal_fee(1);
-			unifiedorderReqData.setAppid("wxd678efh567hg6787");
-			unifiedorderReqData.setMch_id("1230000109");
-			final String x = unifiedOrderService.request(unifiedorderReqData);
-			System.out.println(x);
+			unifiedorderReqData.setBody("zz");
+			unifiedorderReqData.setSpbill_create_ip("10.112.0.16");
+			final ScanPayQueryBusiness scanPayQueryBusiness = new ScanPayQueryBusiness(unifiedorderReqData,
+					new OrderUpdateResultListener(){
+				
+			});
+			scanPayQueryBusiness.run();
+//			final UnifiedOrderService unifiedOrderService = new UnifiedOrderService();
+//			final UnifiedorderReqData unifiedorderReqData = new UnifiedorderReqData();
+//			unifiedorderReqData.setOut_trade_no("S002-00253002");
+//			unifiedorderReqData.setTotal_fee(1);
+//			unifiedorderReqData.setAppid("wxd678efh567hg6787");
+//			unifiedorderReqData.setMch_id("1230000109");
+//			final String x = unifiedOrderService.request(unifiedorderReqData);
+//			System.out.println(x);
 			//--------------------------------------------------------------------
 			//温馨提示，第一次使用该SDK时请到com.tencent.common.Configure类里面进行配置
 			//--------------------------------------------------------------------

@@ -42,10 +42,10 @@ public class ScanPayQueryBusiness implements Runnable
 
 	//每次调用订单查询API时的等待时间，因为当出现支付失败的时候，如果马上发起查询不一定就能查到结果，所以这里建议先等待一定时间再发起查询
 
-	private int waitingTimeBeforePayQueryServiceInvoked = 5000;
+	private int waitingTimeBeforePayQueryServiceInvoked = 10000;
 
 	//循环调用订单查询API的次数
-	private int payQueryLoopInvokedCount = 3;
+	private int payQueryLoopInvokedCount = 100;
 
 	private ScanPayQueryService scanPayQueryService;
 
