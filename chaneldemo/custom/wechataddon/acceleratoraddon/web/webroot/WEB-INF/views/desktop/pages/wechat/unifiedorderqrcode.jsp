@@ -27,12 +27,18 @@
 		</div>
 	</div>
 	<script type="text/javascript">
-	timeoutId = setTimeout(function ()
-			{
-				$('#addToCartLayer').fadeOut(function(){
-			 	   $('#addToCartLayer').remove();
-					
-				});
-			}, 5000);
+	timeoutId = window.setInterval(function ()
+	{
+		$.ajax({
+		    url :  ACC.config.encodedContextPath + "/wechat/checkorder/${ordercode}",
+		    cache : false,
+		    async : false
+		   }).done(function(response) {
+			   console.info(response);
+			   if("1"==response){
+				   window.location.href = ACC.config.encodedContextPath + "/checkout/orderSucceed/${ordercode}";
+			   }
+		   });
+		}, 5000);
 	</script>
 </template:page>

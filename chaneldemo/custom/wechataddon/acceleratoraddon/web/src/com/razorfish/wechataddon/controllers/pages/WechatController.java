@@ -19,6 +19,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.razorfish.wechataddon.controllers.WechataddonControllerConstants;
 import com.razorfish.wechataddon.daos.WechatQueryDao;
@@ -53,6 +54,7 @@ public class WechatController extends AbstractPageController
 	OrderUpdateResultListener orderUpdateResultListener;
 
 	@RequestMapping(value = "/checkorder/" + ORDER_CODE_PATH_VARIABLE_PATTERN, method = RequestMethod.GET)
+	@ResponseBody
 	public String checkTradeStatus(@PathVariable("orderCode") final String orderCode, final Model model,
 			final HttpServletRequest request, final HttpServletResponse response)
 	{
