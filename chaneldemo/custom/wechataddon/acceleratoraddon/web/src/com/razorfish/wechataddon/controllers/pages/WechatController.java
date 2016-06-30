@@ -4,12 +4,15 @@ import de.hybris.platform.acceleratorstorefrontcommons.controllers.pages.Abstrac
 import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
 import de.hybris.platform.commercefacades.order.OrderFacade;
 import de.hybris.platform.commercefacades.order.data.OrderData;
+import de.hybris.platform.core.enums.PaymentStatus;
+import de.hybris.platform.core.model.order.OrderModel;
 import de.hybris.platform.order.OrderService;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.razorfish.wechataddon.controllers.WechataddonControllerConstants;
+import com.razorfish.wechataddon.daos.WechatQueryDao;
 import com.razorfish.wechataddon.service.OrderUpdateResultListener;
 import com.tencent.business.ScanPayQueryBusiness;
 import com.tencent.common.Util;
@@ -42,6 +46,9 @@ public class WechatController extends AbstractPageController
 	@Resource(name = "orderFacade")
 	private OrderFacade orderFacade;
 
+	@Resource(name = "wechatOrderQueryDao")
+	WechatQueryDao<OrderModel> wechatOrderQueryDao;
+
 	@Resource
 	OrderUpdateResultListener orderUpdateResultListener;
 
@@ -49,7 +56,12 @@ public class WechatController extends AbstractPageController
 	public String checkTradeStatus(@PathVariable("orderCode") final String orderCode, final Model model,
 			final HttpServletRequest request, final HttpServletResponse response)
 	{
-		return null;
+		final OrderModel order = wechatOrderQueryDao.findById("code", orderCode);
+		if (PaymentStatus.PAID.equals(order.getPaymentStatus()))
+		{
+			return "1";
+		}
+		return "0";
 	}
 
 
@@ -65,13 +77,22 @@ public class WechatController extends AbstractPageController
 			final OrderData orderData = orderFacade.getOrderDetailsForCode(orderCode);
 			unifiedorderReqData.setOut_trade_no(orderCode);
 			unifiedorderReqData.setTotal_fee(orderData.getTotalPrice().getValue().intValue());
+			unifiedorderReqData.setBody("zz");
+			unifiedorderReqData.setSpbill_create_ip(request.getLocalAddr());
 			final String unifiedorderResxml = unifiedOrderService.request(unifiedorderReqData);
+			LOG.info(unifiedorderResxml);
 			final UnifiedorderResData unifiedorderResData = (UnifiedorderResData) Util.getObjectFromXML(unifiedorderResxml,
 					UnifiedorderResData.class);
-			qrcode_url = unifiedorderResData.getCode_url();
-			final ScanPayQueryBusiness scanPayQueryBusiness = new ScanPayQueryBusiness(unifiedorderReqData,
-					orderUpdateResultListener);
-			new Thread(scanPayQueryBusiness).start();
+			if (unifiedorderResData.getReturn_code().equals("SUCCESS") && unifiedorderResData.getResult_code().equals("SUCCESS"))
+			{
+				qrcode_url = unifiedorderResData.getCode_url();
+				if (!StringUtils.isEmpty(qrcode_url))
+				{
+					final ScanPayQueryBusiness scanPayQueryBusiness = new ScanPayQueryBusiness(unifiedorderReqData,
+							orderUpdateResultListener);
+					new Thread(scanPayQueryBusiness).start();
+				}
+			}
 		}
 		catch (final IllegalAccessException e)
 		{
@@ -93,6 +114,7 @@ public class WechatController extends AbstractPageController
 			// YTODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		model.addAttribute("ordercode", orderCode);
 		model.addAttribute("qrcode_url", qrcode_url);
 		storeCmsPageInModel(model, getContentPageForLabelOrId(null));
 		setUpMetaDataForContentPage(model, getContentPageForLabelOrId(null));

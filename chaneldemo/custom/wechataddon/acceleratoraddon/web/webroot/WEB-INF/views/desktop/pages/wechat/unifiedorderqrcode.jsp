@@ -13,12 +13,6 @@
 <%@ taglib prefix="ycommerce" uri="http://hybris.com/tld/ycommercetags" %>
 
 <template:page pageTitle="${pageTitle}" hideHeaderLinks="true">
-	<div id="breadcrumb" class="breadcrumb">
-		<breadcrumb:breadcrumb breadcrumbs="${breadcrumbs}"/>
-	</div>
-	<div id="globalMessages">
-		<common:globalMessages/>
-	</div>
 	<div class="span-20 last">
 		<div class="span-20 last">
 			<div class="item_container_holder">
@@ -26,9 +20,19 @@
 					<h2></h2>
 				</div>
 				<div class="item_container">
+					<input type="hidden" value="${ordercode}" name="ordercode" />
 					<img src="${qrcode_url}"/>
 				</div>
 			</div>
 		</div>
 	</div>
+	<script type="text/javascript">
+	timeoutId = setTimeout(function ()
+			{
+				$('#addToCartLayer').fadeOut(function(){
+			 	   $('#addToCartLayer').remove();
+					
+				});
+			}, 5000);
+	</script>
 </template:page>

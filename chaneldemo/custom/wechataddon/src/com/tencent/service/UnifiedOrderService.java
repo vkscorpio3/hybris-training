@@ -1,6 +1,7 @@
 package com.tencent.service;
 
 import com.tencent.common.Configure;
+import com.tencent.common.Signature;
 import com.tencent.protocol.qrcode.UnifiedorderReqData;
 
 
@@ -26,11 +27,10 @@ public class UnifiedOrderService extends BaseService
 	public String request(final UnifiedorderReqData unifiedorderReqData) throws Exception
 	{
 
-		//--------------------------------------------------------------------
-		//发送HTTPS的Post请求到API地址
-		//--------------------------------------------------------------------
+		unifiedorderReqData.setFee_type("NATIVE");
+		final String sign = Signature.getSign(unifiedorderReqData.toMap());
+		unifiedorderReqData.setSign(sign);
 		final String responseString = sendPost(unifiedorderReqData);
-
 		return responseString;
 	}
 }

@@ -51,8 +51,6 @@ public class UnifiedorderReqData
 		setAppid(Configure.getAppid());
 		setMch_id(Configure.getMchid());
 		setNonce_str(RandomStringGenerator.getRandomStringByLength(32));
-		final String sign = Signature.getSign(toMap());
-		setSign(sign);
 	}
 
 	public UnifiedorderReqData(final String authCode, final String body, final String attach, final String outTradeNo,
