@@ -1,5 +1,7 @@
 package com.tencent.common;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.SocketTimeoutException;
 import java.security.KeyManagementException;
@@ -7,6 +9,7 @@ import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.UnrecoverableKeyException;
+import java.security.cert.CertificateException;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -67,10 +70,25 @@ public class HttpsRequest implements IServiceRequest
 	{
 
 		final KeyStore keyStore = KeyStore.getInstance(KeyStore.getDefaultType());
-		final SSLSocketFactory socketFactory = new SSLSocketFactory(keyStore);
+
 
 		httpClient = new DefaultHttpClient();
-
+		final FileInputStream instream = new FileInputStream(new File(this.getClass().getResource("/").getPath()
+				+ Configure.getCertLocalPath()));
+		try
+		{
+			keyStore.load(instream, Configure.getCertPassword().toCharArray());
+		}
+		catch (final CertificateException e)
+		{
+			// YTODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		finally
+		{
+			instream.close();
+		}
+		final SSLSocketFactory socketFactory = new SSLSocketFactory(keyStore);
 		socketFactory.setHostnameVerifier(SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
 		final Scheme sch = new Scheme("https", 443, socketFactory);
 		httpClient.getConnectionManager().getSchemeRegistry().register(sch);
