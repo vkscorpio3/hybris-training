@@ -9,8 +9,6 @@
 		<path dir="${HYBRIS_BIN_DIR}" />
 		
 
-										
-		<!-- ext-platform -->
 		<extension name="admincockpit" />
 		<extension name="backoffice" />
 		<extension name="cockpit" />
@@ -26,6 +24,11 @@
 		<extension name="commercesearchbackoffice" />
 		<extension name="commercesearchhmc" />
 		<extension name="commerceservices" />
+		<extension name="chinastoreelectronics" />
+		<extension name="chinaacceleratorservices" />
+		<extension name="chinacheckoutaddon" />
+		<extension name="chinaacceleratorfacades" />
+		<extension name="alipay" />
 		<extension name="basecommerce" />
 		<extension name="payment" />
 		<extension name="promotions" />
@@ -34,6 +37,9 @@
 		<extension name="ticketsystem" />
 		<extension name="solrfacetsearch" />
 		<extension name="solrfacetsearchhmc" />
+		<extension name="b2bcommerce" />
+		<extension name="b2bapprovalprocess" />
+		<extension name="b2badmincockpit" />
 		<extension name="oci" />
 		<extension name="wishlist" />
 		<extension name="commercefacades" />
@@ -42,6 +48,7 @@
 		<!-- ext-data -->
 		<extension name="commercesearchsampledata" />
 		<extension name="electronicsstore" />
+		<extension name="b2bacceleratorsampledata" />
 		<extension name="instoresampledata" />
 
 										
@@ -67,20 +74,39 @@
 		<!-- ext-addon -->
 		<extension name="addonsupport" />
 		<extension name="b2ccheckoutaddon" />
-				
+
+										
+		<!-- ext-print -->
+		<extension name="print" />
+		<extension name="printcockpit" />
+		<extension name="printhmc" />
+
+										
 		<!-- ext-template -->
+		<extension name="ycommercewebservices" />
+		<extension name="ycommercewebserviceshmc" />
 		<extension name="yacceleratorfulfilmentprocess" />
+		<extension name="yaddon" />
+		<extension name="yacceleratortest" />
+		<extension name="yacceleratorstorefront" />
+		<extension name="xchinaacceleratorstorefront" />
 		<extension name="yacceleratorinitialdata" />
-							
+		<extension name="yacceleratorcockpits" />
+		<extension name="yb2bacceleratorcore" />
+		<extension name="yb2bacceleratorfacades" />
+		<extension name="yb2bacceleratorinitialdata" />
+		<extension name="yb2bacceleratorstorefront" />
+		<extension name="yb2bacceleratortest" />
+		<extension name="yinstoreinitialdata" />
+					
 		<!-- ext-accelerator -->
 		<extension name="acceleratorservices" />
 		<extension name="acceleratorfacades" />
+		<extension name="acceleratorcms" />
 		<extension name="acceleratorstorefrontcommons" />
-		
-		<extension name="xchinaacceleratorstorefront" />	
-		<extension name="wechataddon" />	
-		<extension name="chinaacceleratorfacades" />	
-		<extension name="chinaacceleratorservices" />
-		<extension name="chinacheckoutaddon" />	
+		<extension name="b2bacceleratorfacades" />
+		<extension name="b2bacceleratorservices" />
+		<extension name="wechataddon" />
+
 	</extensions>
 </hybrisconfig>

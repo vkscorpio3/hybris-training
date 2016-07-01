@@ -66,7 +66,7 @@
                             	<div class="submitOrder5_left"><spring:theme code="order.submit.selected.payment.method" /></div>
                                 <div class="submitOrder5_mid"><img src="${contextPath}/_ui/desktop/common/images/submit/pay1.jpg" alt="" /></div>
                                 <div class="submitOrder5_right">
-									<a href="${contextPath}/alipay/requestController/${orderData.code}" target="_blank"><spring:theme code="order.submit.payment.immediately" /></a>
+									<a href="${contextPath}/wechat/unifiedOrder/${orderData.code}" target="_blank"><spring:theme code="order.submit.payment.immediately" /></a>
                                 </div>
                             </div>
                             <p><spring:theme code="order.submit.receptioniste" /></p>
